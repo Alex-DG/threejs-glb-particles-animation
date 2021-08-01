@@ -1,5 +1,7 @@
 # Three.js - Load glb model with particles and GSAP animation 
 
+[Demo](https://threejs-glb-particles-animation.netlify.app/)
+
 *Initial 3D models:
 - skull model: https://free3d.com/3d-model/skull-v3--785914.html
 - horde model: https://free3d.com/3d-model/american-paint-horse-nuetral-v1--575385.html
