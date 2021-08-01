@@ -46,9 +46,9 @@ const controls = new OrbitControls(camera, renderer.domElement)
 Helpers
 ------------------------------*/
 const gridHelper = new THREE.GridHelper(10, 10)
-scene.add(gridHelper)
 const axesHelper = new THREE.AxesHelper(5)
-scene.add(axesHelper)
+
+let helpersShowing = false
 
 /*------------------------------
 Models
@@ -77,6 +77,17 @@ buttons[0].addEventListener('click', () => {
 buttons[1].addEventListener('click', () => {
   horse.add()
   skull.remove()
+})
+buttons[2].addEventListener('click', () => {
+  if (helpersShowing) {
+    scene.remove(axesHelper)
+    scene.remove(gridHelper)
+  } else {
+    scene.add(axesHelper)
+    scene.add(gridHelper)
+  }
+
+  helpersShowing = !helpersShowing
 })
 
 /*------------------------------

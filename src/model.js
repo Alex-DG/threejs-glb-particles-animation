@@ -2,6 +2,7 @@ import * as THREE from 'three'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 class Model {
   constructor(object) {
@@ -22,25 +23,80 @@ class Model {
 
   init() {
     this.loader.load(this.file, (response) => {
-      console.log({ response })
-
+      /**
+       * Mesh
+       */
       this.mesh = response.scene.children[0]
+
+      /**
+       * Material
+       */
       this.material = new THREE.MeshBasicMaterial({
-        color: 'orange',
+        color: 'red',
         wireframe: true,
       })
       this.mesh.material = this.material
+
+      /**
+       * Geometry
+       */
+      this.geometry = this.mesh.geometry
+
+      /**
+       * Particles material
+       */
+      this.particlesMaterial = new THREE.PointsMaterial({
+        color: 'red',
+        size: 0.02,
+      })
+
+      /**
+       * Particles geometry
+       */
+      // Create a sampler for a Mesh surface.
+      const sampler = new MeshSurfaceSampler(this.mesh)
+        .setWeightAttribute('color')
+        .build()
+
+      const numberParticles = 20000
+
+      this.particlesGeometry = new THREE.BufferGeometry()
+      const particlesPosition = new Float32Array(numberParticles * 3) // x,y,z
+      for (let i = 0; i < numberParticles; i++) {
+        const newPosition = new THREE.Vector3()
+        sampler.sample(newPosition)
+
+        particlesPosition.set(
+          [newPosition.x, newPosition.y, newPosition.z],
+          i * 3
+        )
+      }
+
+      this.particlesGeometry.setAttribute(
+        'position',
+        new THREE.BufferAttribute(particlesPosition, 3)
+      )
+
+      console.log(this.particlesGeometry)
+
+      /**
+       * Particles
+       */
+      this.particles = new THREE.Points(
+        this.particlesGeometry,
+        this.particlesMaterial
+      )
 
       if (this.placeOnLoad) this.add()
     })
   }
 
   add() {
-    this.scene.add(this.mesh)
+    this.scene.add(this.particles)
   }
 
   remove() {
-    this.scene.remove(this.mesh)
+    this.scene.remove(this.particles)
   }
 }
 
