@@ -12,3 +12,25 @@ canvas {
   width: 100%;
   height: 100%;
 }
+
+#controllers {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.button {
+  border: none;
+  background-color: white;
+  color: black;
+  padding: 8px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  outline: none;
+  margin: 5px;
+  font-family: sans-serif;
+}
