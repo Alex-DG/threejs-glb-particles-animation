@@ -12,11 +12,12 @@ import fragmentShader from './shaders/fragment.glsl'
 
 class Model {
   constructor(object) {
-    const { name, file, scene, placeOnLoad, colors } = object
+    const { name, file, scene, placeOnLoad, colors, background } = object
     this.name = name
     this.file = file
     this.scene = scene
     this.placeOnLoad = placeOnLoad
+    this.background = background
 
     this.isActive = false
 
@@ -134,7 +135,6 @@ class Model {
 
   add() {
     this.scene.add(this.particles)
-    this.isActive = true
 
     gsap.to(this.particlesMaterial.uniforms.uScale, {
       value: 1,
@@ -142,6 +142,27 @@ class Model {
       delay: 0.3,
       ease: 'power3.out',
     })
+
+    if (!this.isActive) {
+      gsap.fromTo(
+        this.particles.rotation,
+        {
+          y: Math.PI,
+        },
+        {
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        }
+      )
+
+      gsap.to('body', {
+        background: this.background,
+        duration: 0.8,
+      })
+    }
+
+    this.isActive = true
   }
 
   remove() {
@@ -153,6 +174,12 @@ class Model {
         this.scene.remove(this.particles)
         this.isActive = false
       },
+    })
+
+    gsap.to(this.particles.rotation.uScale, {
+      y: Math.PI,
+      duration: 0.8,
+      ease: 'power3.out',
     })
   }
 }

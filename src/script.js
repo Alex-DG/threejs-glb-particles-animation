@@ -2,6 +2,8 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
+import gsap from 'gsap'
+
 import Model from './model'
 
 /*------------------------------
@@ -58,6 +60,7 @@ const skull = new Model({
   name: 'skull',
   file: './models/skull.glb',
   colors: ['red', 'yellow'],
+  background: '#47001b',
   placeOnLoad: true,
   scene,
 })
@@ -66,6 +69,7 @@ const horse = new Model({
   name: 'horse',
   file: './models/horse.glb',
   colors: ['blue', 'pink'],
+  background: '#110047',
   scene,
 })
 
@@ -118,9 +122,23 @@ animate()
 /*------------------------------
 Resize
 ------------------------------*/
-function onWindowResize() {
+const onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
 window.addEventListener('resize', onWindowResize, false)
+
+/*------------------------------
+Mouse move
+------------------------------*/
+const onMouseMove = ({ clientX, clientY }) => {
+  const x = clientX
+  const y = clientY
+
+  gsap.to(scene.rotation, {
+    y: -gsap.utils.mapRange(0, window.innerWidth, 0.2, -0.2, x),
+    x: -gsap.utils.mapRange(0, window.innerHeight, 0.2, -0.2, y),
+  })
+}
+window.addEventListener('mousemove', onMouseMove)
