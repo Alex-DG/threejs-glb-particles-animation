@@ -4,13 +4,20 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
+// Shaders
+import vertexShader from './shaders/vertex.glsl'
+import fragmentShader from './shaders/fragment.glsl'
+
 class Model {
   constructor(object) {
-    const { name, file, scene, placeOnLoad } = object
+    const { name, file, scene, placeOnLoad, colors } = object
     this.name = name
     this.file = file
     this.scene = scene
     this.placeOnLoad = placeOnLoad
+
+    this.color1 = colors[0]
+    this.color2 = colors[1]
 
     this.loader = new GLTFLoader() // Instantiate a loader
     this.dracoLoader = new DRACOLoader() // DRACOLoader instance to decode compressed mesh data
@@ -45,9 +52,21 @@ class Model {
       /**
        * Particles material
        */
-      this.particlesMaterial = new THREE.PointsMaterial({
-        color: 'red',
-        size: 0.02,
+      //   this.particlesMaterial = new THREE.PointsMaterial({
+      //     color: 'red',
+      //     size: 0.02,
+      //   })
+      this.particlesMaterial = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uColor1: { value: new THREE.Color(this.color1) },
+          uColor2: { value: new THREE.Color(this.color2) },
+        },
       })
 
       /**

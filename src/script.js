@@ -41,6 +41,7 @@ const cube = new THREE.Mesh(geometry, material)
 OrbitControls
 ------------------------------*/
 const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true
 
 /*------------------------------
 Helpers
@@ -56,6 +57,7 @@ Models
 const skull = new Model({
   name: 'skull',
   file: './models/skull.glb',
+  colors: ['red', 'yellow'],
   placeOnLoad: true,
   scene,
 })
@@ -63,6 +65,7 @@ const skull = new Model({
 const horse = new Model({
   name: 'horse',
   file: './models/horse.glb',
+  colors: ['blue', 'pink'],
   scene,
 })
 
